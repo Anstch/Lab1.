@@ -3,15 +3,12 @@
 #include <fstream> //работа с файлами
 #include <iomanip> //для setw
 using namespace std;
-//using namespace VideoLibrary;
-
 std::ostream& operator<<(std::ostream& os, const Video& video) {
         os << video.title << '\n';
         os << video.author << '\n';
         os << video.likes << '\n';
         return os;
 }
-
 std::istream& operator>>(std::istream& is, Video& video) {
         is.getline(video.title, 100);
         is.getline(video.author, 100);
@@ -19,33 +16,23 @@ std::istream& operator>>(std::istream& is, Video& video) {
         is.ignore();
         return is;
 }
-
-
 namespace VideoLibrary {
-
     VideoManager::VideoManager(const char* filename) : pRoot(nullptr), VideoFile(filename) {} //берем из класса в заголовочком файле
-
-    
-
     VideoManager::~VideoManager() { //деструктив 
         removeAll();
     }
-
     Video* VideoManager::createVideo() {
         return new Video;
     }
-
     void VideoManager::destroyVideo(Video* video) {
         delete video;
     }
-
     void VideoManager::loadVideos() {
         std::ifstream file(VideoFile, std::ios::binary); // Используем бинарный режим
         if (!file.is_open()) {
             std::cout << "Файл не найден\n";
             return;
         }
-
         removeAll(); // Удаляем всё, что хранится в памяти в этот момент, чтобы записать по новой всё из файла
 
         Video tempVideo; // Объект для временного хранения прочитанного видео
@@ -64,12 +51,9 @@ namespace VideoLibrary {
                 break;
             }
         }
-
         file.close();
         std::cout << "Видео загружены.\n";
     }
-
-
     void VideoManager::saveVideos() {
         std::ofstream file(VideoFile, std::ios::binary);
         if (!file.is_open()) {
@@ -86,7 +70,6 @@ namespace VideoLibrary {
 
         file.close();
     }
-
     void VideoManager::deleteVideos() {
         int index;
         std::cout << "Введите номер элемента, который желаете удалить: \n";
@@ -97,12 +80,10 @@ namespace VideoLibrary {
             std::cout << "Список видео пуст\n";
             return;
         }
-
         if (index < 0) {
             std::cout << "Ошибка! Введен некорректный номер!\n";
             return;
         }
-
         Video* pRem = pRoot;
         if (index == 0) {
             pRoot = pRoot->pPrev;
@@ -121,13 +102,11 @@ namespace VideoLibrary {
                 pRem = pRem->pPrev;
                 num++;
             }
-
             pCur->pPrev = pRem->pPrev;
             destroyVideo(pRem);
             std::cout << "Видео удалено.\n";
         }
     }
-
     void VideoManager::addVideos(){
         Video* pNew = createVideo();
 
@@ -181,6 +160,4 @@ namespace VideoLibrary {
         }
         pRoot = nullptr;
     }
-
-
 }
